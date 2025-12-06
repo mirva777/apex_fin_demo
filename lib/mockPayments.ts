@@ -19,20 +19,20 @@ export const PROVIDERS: Provider[] = [
 
 // Mock database of last payments per provider
 export const LAST_PAYMENTS: Record<string, { amount: number; date: Date }> = {
-  uzgas: { amount: 120000, date: new Date('2024-11-15') },
-  uzelectric: { amount: 85000, date: new Date('2024-11-18') },
-  ucell: { amount: 50000, date: new Date('2024-11-20') },
-  beeline: { amount: 45000, date: new Date('2024-11-22') },
-  uztelecom: { amount: 100000, date: new Date('2024-11-10') },
-  perfectum: { amount: 150000, date: new Date('2024-11-12') },
-  uzwater: { amount: 35000, date: new Date('2024-11-14') },
-  food: { amount: 250000, date: new Date('2024-11-16') },
-  rent: { amount: 3000000, date: new Date('2024-11-01') },
-  shopping: { amount: 180000, date: new Date('2024-11-19') },
-  transport: { amount: 75000, date: new Date('2024-11-21') },
-  entertainment: { amount: 150000, date: new Date('2024-11-17') },
-  healthcare: { amount: 200000, date: new Date('2024-11-13') },
-  education: { amount: 500000, date: new Date('2024-11-05') },
+  uzgas: { amount: 120000, date: new Date('2025-11-15') },
+  uzelectric: { amount: 85000, date: new Date('2025-11-18') },
+  ucell: { amount: 50000, date: new Date('2025-11-20') },
+  beeline: { amount: 45000, date: new Date('2025-11-22') },
+  uztelecom: { amount: 100000, date: new Date('2025-11-10') },
+  perfectum: { amount: 150000, date: new Date('2025-11-12') },
+  uzwater: { amount: 35000, date: new Date('2025-11-14') },
+  food: { amount: 250000, date: new Date('2025-11-16') },
+  rent: { amount: 3000000, date: new Date('2025-11-01') },
+  shopping: { amount: 180000, date: new Date('2025-11-19') },
+  transport: { amount: 75000, date: new Date('2025-11-21') },
+  entertainment: { amount: 150000, date: new Date('2025-11-17') },
+  healthcare: { amount: 200000, date: new Date('2025-11-13') },
+  education: { amount: 500000, date: new Date('2025-11-05') },
 };
 
 export function getProviderByType(billType: BillType): Provider | null {

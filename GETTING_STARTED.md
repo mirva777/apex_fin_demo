@@ -334,4 +334,4 @@ Voice:    VOICE_COMMANDS.md
 ---
 
 *Made with ❤️ using Next.js, TypeScript, and Web Speech APIs*
-*December 6, 2024*
+*December 6, 2025*

@@ -156,7 +156,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="mt-20 text-center text-text-muted">
           <p className="text-sm">
-            OvozPay AI - Voice Payment Assistant Demo © 2024
+            OvozPay AI - Voice Payment Assistant Demo © 2025
           </p>
           <p className="text-xs mt-2">
             All payments are simulated for demonstration purposes only.
