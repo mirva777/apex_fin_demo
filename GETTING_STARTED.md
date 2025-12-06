@@ -163,7 +163,7 @@ See **DEPLOYMENT.md** for more platforms.
 Edit `tailwind.config.ts`:
 ```typescript
 colors: {
-  primary: '#00ff88',  // Neon green
+  primary: '#00F0FF',  // Cyan
   secondary: '#00d4ff', // Cyan
   // Change these!
 }

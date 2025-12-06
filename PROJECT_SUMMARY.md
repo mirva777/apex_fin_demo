@@ -230,7 +230,7 @@ Edit `tailwind.config.ts`:
 
 ```typescript
 colors: {
-  primary: '#00ff88',  // Change this!
+  primary: '#00F0FF',  // Cyan
   // ...
 }
 ```

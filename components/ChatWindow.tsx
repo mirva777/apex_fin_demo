@@ -36,7 +36,8 @@ export default function ChatWindow({ messages, interimTranscript }: ChatWindowPr
             <div>
               <p className="mb-2">👋 Hello! I'm your voice payment assistant.</p>
               <p className="text-sm">Tap the microphone and say something like:</p>
-              <p className="text-xs mt-2 text-primary">"Pay gas bill 120 thousand so'm"</p>
+              <p className="text-xs mt-2 text-primary">"Pay for food 250 thousand so'm"</p>
+              <p className="text-xs mt-1 text-primary">"Pay gas bill 120 thousand"</p>
             </div>
           </div>
         )}

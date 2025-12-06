@@ -18,6 +18,7 @@ export default function OvozPayDemo() {
   const [paymentHistory, setPaymentHistory] = useState<Payment[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [pendingIntent, setPendingIntent] = useState<IntentResult | null>(null);
+  const [waitingForAmount, setWaitingForAmount] = useState(false);
   const [paymentSteps, setPaymentSteps] = useState<PaymentStep[]>([
     { id: 1, label: 'Connecting to bank...', status: 'pending' },
     { id: 2, label: 'Verifying account...', status: 'pending' },
@@ -107,6 +108,7 @@ export default function OvozPayDemo() {
     setPaymentHistory((prev) => [completedPmt, ...prev]);
     setCurrentPayment(null);
     setPendingIntent(null);
+    setWaitingForAmount(false);
 
     addMessage(
       `Payment successful! Your ${payment.provider.name} bill has been paid. Transaction ID: ${transactionId}`,
@@ -135,8 +137,54 @@ export default function OvozPayDemo() {
       };
 
       setCurrentPayment(payment);
+      setWaitingForAmount(false);
       processPayment(payment);
       return;
+    }
+
+    // Check if we're waiting for an amount and user just said a number
+    if (waitingForAmount && pendingIntent) {
+      // Try to parse amount from the transcript
+      const lowerText = finalTranscript.toLowerCase();
+      let amount: number | null = null;
+      
+      // Try to extract numeric amount
+      const numericMatch = lowerText.match(/(\d+[\s,]*\d*)/);
+      if (numericMatch) {
+        amount = parseInt(numericMatch[1].replace(/[\s,]/g, ''), 10);
+      }
+      
+      // Check for text numbers like "120 ming" (120 thousand)
+      const mingMatch = lowerText.match(/(\d+)[\s]*(ming|thousand|тысяч)/);
+      if (mingMatch) {
+        amount = parseInt(mingMatch[1], 10) * 1000;
+      }
+      
+      if (amount) {
+        // Update the pending intent with the amount
+        const updatedIntent: IntentResult = {
+          ...pendingIntent,
+          amount,
+        };
+        
+        const response = generateResponse(updatedIntent, 'initial');
+        addMessage(response, 'assistant');
+        setPendingIntent(updatedIntent);
+        setWaitingForAmount(false);
+        
+        // Set up the payment preview
+        const payment: Payment = {
+          id: Date.now().toString(),
+          provider: updatedIntent.provider!,
+          amount: amount,
+          currency: "so'm",
+          date: new Date(),
+          status: 'pending',
+        };
+        setCurrentPayment(payment);
+        setCompletedPayment(null);
+        return;
+      }
     }
 
     // Parse new intent
@@ -144,20 +192,23 @@ export default function OvozPayDemo() {
 
     if (intent.billType === 'unknown') {
       addMessage(generateResponse(intent, 'initial'), 'assistant');
+      setWaitingForAmount(false);
       return;
     }
 
     if (!intent.provider) {
       addMessage(generateResponse(intent, 'initial'), 'assistant');
+      setWaitingForAmount(false);
       return;
     }
 
     if (!intent.amount) {
       addMessage(
-        `I understand you want to pay ${intent.provider.name}. How much would you like to pay?`,
+        `I understand you want to pay for ${intent.provider.name}. How much would you like to pay?`,
         'assistant'
       );
       setPendingIntent(intent);
+      setWaitingForAmount(true);
       return;
     }
 
@@ -165,6 +216,7 @@ export default function OvozPayDemo() {
     const response = generateResponse(intent, 'initial');
     addMessage(response, 'assistant');
     setPendingIntent(intent);
+    setWaitingForAmount(false);
 
     // Set up the payment preview
     const payment: Payment = {
@@ -177,7 +229,7 @@ export default function OvozPayDemo() {
     };
     setCurrentPayment(payment);
     setCompletedPayment(null);
-  }, [addMessage, pendingIntent, processPayment]);
+  }, [addMessage, pendingIntent, processPayment, waitingForAmount]);
 
   const handleMicClick = useCallback(() => {
     if (isListening) {
@@ -191,7 +243,7 @@ export default function OvozPayDemo() {
   useEffect(() => {
     const timer = setTimeout(() => {
       addMessage(
-        "Hello! I'm your voice payment assistant. Tell me which bill you'd like to pay.",
+        "Hello! I'm your voice payment assistant. Tell me what you'd like to pay for. You can pay for anything - gas, electricity, food, rent, shopping, or anything else!",
         'assistant'
       );
     }, 500);
@@ -266,7 +318,7 @@ export default function OvozPayDemo() {
       {/* Footer */}
       <footer className="border-t border-primary/20 bg-background-card/50 backdrop-blur py-4">
         <div className="container mx-auto px-4 text-center text-text-muted text-sm">
-          <p>Try saying: "Pay gas bill 120 thousand so'm" or "Pay electricity same as last time"</p>
+          <p>Try saying: "Pay for food 250 thousand so'm" or "Pay gas bill 120 thousand" or "Pay rent same as last time"</p>
         </div>
       </footer>
     </div>

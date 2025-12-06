@@ -329,7 +329,7 @@ Show Receipt
 
 ### Color Scheme
 - Background: `#0a0a0f`
-- Primary (Neon Green): `#00ff88`
+- Primary (Cyan): `#00F0FF`
 - Secondary (Cyan): `#00d4ff`
 - Accent (Pink): `#ff0080`
 

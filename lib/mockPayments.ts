@@ -8,6 +8,13 @@ export const PROVIDERS: Provider[] = [
   { id: 'uztelecom', name: 'UzTelecom', billType: 'internet', icon: '🌐' },
   { id: 'perfectum', name: 'Perfectum', billType: 'internet', icon: '🌐' },
   { id: 'uzwater', name: 'UzWater', billType: 'water', icon: '💧' },
+  { id: 'food', name: 'Food & Groceries', billType: 'food', icon: '🍔' },
+  { id: 'rent', name: 'Rent Payment', billType: 'rent', icon: '🏠' },
+  { id: 'shopping', name: 'Shopping', billType: 'shopping', icon: '🛍️' },
+  { id: 'transport', name: 'Transportation', billType: 'transport', icon: '🚗' },
+  { id: 'entertainment', name: 'Entertainment', billType: 'entertainment', icon: '🎬' },
+  { id: 'healthcare', name: 'Healthcare', billType: 'healthcare', icon: '🏥' },
+  { id: 'education', name: 'Education', billType: 'education', icon: '📚' },
 ];
 
 // Mock database of last payments per provider
@@ -19,6 +26,13 @@ export const LAST_PAYMENTS: Record<string, { amount: number; date: Date }> = {
   uztelecom: { amount: 100000, date: new Date('2024-11-10') },
   perfectum: { amount: 150000, date: new Date('2024-11-12') },
   uzwater: { amount: 35000, date: new Date('2024-11-14') },
+  food: { amount: 250000, date: new Date('2024-11-16') },
+  rent: { amount: 3000000, date: new Date('2024-11-01') },
+  shopping: { amount: 180000, date: new Date('2024-11-19') },
+  transport: { amount: 75000, date: new Date('2024-11-21') },
+  entertainment: { amount: 150000, date: new Date('2024-11-17') },
+  healthcare: { amount: 200000, date: new Date('2024-11-13') },
+  education: { amount: 500000, date: new Date('2024-11-05') },
 };
 
 export function getProviderByType(billType: BillType): Provider | null {

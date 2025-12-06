@@ -42,8 +42,8 @@ export default function Home() {
               <span className="gradient-text">Your Voice</span>
             </h2>
             <p className="text-xl text-text-muted mb-8 max-w-2xl mx-auto">
-              AI-powered voice assistant that makes bill payments simple and accessible for everyone. 
-              Just speak, and we'll handle the rest.
+              AI-powered voice assistant that makes payments simple and accessible for everyone. 
+              Just speak what you want to pay for, and we'll handle the rest.
             </p>
             <Link href="/ovozpay">
               <motion.button
@@ -84,7 +84,7 @@ export default function Home() {
           <FeatureCard
             icon={<Sparkles className="w-8 h-8" />}
             title="AI-Powered"
-            description="Smart intent recognition understands multiple languages: Uzbek, Russian, and English."
+            description="Smart recognition understands natural language in English and Russian. Pay for anything!"
           />
           <FeatureCard
             icon={<Shield className="w-8 h-8" />}
@@ -115,7 +115,7 @@ export default function Home() {
             <Step
               number="2"
               title="Say What You Want"
-              description="Tell us which bill to pay: 'Pay gas bill 120 thousand so'm'"
+              description="Tell us what to pay for: 'Pay for food 250 thousand so'm' or 'Pay gas bill 120 thousand'"
             />
             <Step
               number="3"
@@ -145,7 +145,7 @@ export default function Home() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-primary text-background px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-dark transition-colors inline-flex items-center gap-2"
+              className="bg-gradient-to-r from-primary to-secondary text-background px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-primary/50 transition-all inline-flex items-center gap-2 glow"
             >
               Launch Demo
               <ArrowRight className="w-5 h-5" />

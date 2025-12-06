@@ -8,15 +8,23 @@ body {
 
 @layer utilities {
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent;
   }
   
   .glow {
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.2);
   }
   
   .glow-secondary {
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 0 40px rgba(139, 92, 246, 0.25);
+  }
+  
+  .glow-accent {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.5), 0 0 40px rgba(236, 72, 153, 0.25);
+  }
+  
+  .border-glow {
+    border: 1px solid rgba(0, 240, 255, 0.3);
   }
 }
 
@@ -26,11 +34,12 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-background-light;
+  @apply bg-background;
 }
 
 ::-webkit-scrollbar-thumb {
   @apply bg-primary rounded;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {

@@ -17,15 +17,15 @@ export default function MicButton({ isListening, onClick, disabled }: MicButtonP
         disabled={disabled}
         className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-300 ${
           isListening 
-            ? 'bg-primary glow' 
-            : 'bg-background-card hover:bg-primary/20'
+            ? 'bg-gradient-to-br from-primary to-secondary glow animate-glow-pulse' 
+            : 'bg-background-card hover:bg-primary/20 border border-primary/30'
         } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         whileTap={{ scale: disabled ? 1 : 0.95 }}
         animate={isListening ? {
           boxShadow: [
-            '0 0 20px rgba(0, 255, 136, 0.5)',
-            '0 0 40px rgba(0, 255, 136, 0.8)',
-            '0 0 20px rgba(0, 255, 136, 0.5)',
+            '0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.2)',
+            '0 0 30px rgba(0, 240, 255, 0.6), 0 0 60px rgba(0, 240, 255, 0.3)',
+            '0 0 20px rgba(0, 240, 255, 0.4), 0 0 40px rgba(0, 240, 255, 0.2)',
           ]
         } : {}}
         transition={isListening ? {

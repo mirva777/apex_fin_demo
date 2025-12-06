@@ -1,13 +1,21 @@
-import { IntentResult, BillType } from './types';
+import { IntentResult, BillType, Provider } from './types';
 import { PROVIDERS, getLastPaymentAmount } from './mockPayments';
 
 // Keywords for different bill types in multiple languages
 const BILL_TYPE_KEYWORDS: Record<BillType, string[]> = {
   gas: ['gas', 'gaz', 'газ', 'uzgas'],
   electricity: ['electricity', 'electric', 'elektr', 'ток', 'uzelectric', 'свет'],
-  mobile: ['mobile', 'phone', 'telefon', 'телефон', 'ucell', 'beeline', 'uchun'],
+  mobile: ['mobile', 'phone', 'telefon', 'телефон', 'ucell', 'beeline'],
   internet: ['internet', 'интернет', 'wifi', 'uztelecom', 'perfectum'],
   water: ['water', 'suv', 'вода', 'uzwater'],
+  food: ['food', 'groceries', 'grocery', 'еда', 'продукты', 'ovqat'],
+  rent: ['rent', 'rental', 'квартира', 'apartment', 'ijara', 'house'],
+  shopping: ['shopping', 'shop', 'store', 'покупки', 'xarid'],
+  transport: ['transport', 'taxi', 'bus', 'транспорт', 'transport'],
+  entertainment: ['entertainment', 'movie', 'cinema', 'развлечения', 'ko\'ngilochar'],
+  healthcare: ['health', 'healthcare', 'doctor', 'hospital', 'медицина', 'shifokor'],
+  education: ['education', 'school', 'university', 'образование', 'ta\'lim'],
+  other: [],
   unknown: [],
 };
 
@@ -51,10 +59,36 @@ export function parseIntent(text: string): IntentResult {
     }
   }
   
+  // If no specific keywords found but contains "pay" or "bill", try to extract a custom category
+  if (billType === 'unknown' && (lowerText.includes('pay') || lowerText.includes('bill') || lowerText.includes('платить') || lowerText.includes('to\'lash'))) {
+    // Check if there's a word after "pay" or "for" that could be a category
+    const payForMatch = lowerText.match(/(?:pay|for|bill)\s+(?:for\s+)?(\w+)/);
+    if (payForMatch && payForMatch[1]) {
+      // Create a custom provider for this category
+      billType = 'other';
+    }
+  }
+  
   // Get provider
-  const provider = billType !== 'unknown' 
-    ? PROVIDERS.find(p => p.billType === billType) || null
-    : null;
+  let provider: Provider | null = null;
+  
+  if (billType !== 'unknown') {
+    provider = PROVIDERS.find(p => p.billType === billType) || null;
+    
+    // If no provider found for this bill type, create a dynamic one
+    if (!provider && billType === 'other') {
+      const payForMatch = lowerText.match(/(?:pay|for|bill)\s+(?:for\s+)?(\w+)/);
+      if (payForMatch && payForMatch[1]) {
+        const category = payForMatch[1].charAt(0).toUpperCase() + payForMatch[1].slice(1);
+        provider = {
+          id: payForMatch[1].toLowerCase(),
+          name: category,
+          billType: 'other',
+          icon: '💳'
+        };
+      }
+    }
+  }
   
   // Check for "same as last"
   const sameAsLast = SAME_AS_LAST_KEYWORDS.some(keyword => 
@@ -106,24 +140,24 @@ export function isConfirmation(text: string): boolean {
 export function generateResponse(intent: IntentResult, phase: 'initial' | 'confirmation'): string {
   if (phase === 'initial') {
     if (intent.billType === 'unknown') {
-      return "I couldn't understand which bill you want to pay. Please say something like 'pay gas bill' or 'to'lash elektr uchun'.";
+      return "I couldn't understand what you want to pay for. Please say something like 'pay for food' or 'pay gas bill'.";
     }
     
     if (!intent.provider) {
-      return `I detected you want to pay a ${intent.billType} bill, but I couldn't find the provider. Please try again.`;
+      return `I detected you want to pay for ${intent.billType}, but I couldn't find the details. Please try again.`;
     }
     
     if (intent.sameAsLast && intent.amount) {
-      return `I found your last ${intent.provider.name} bill for ${formatAmount(intent.amount)} so'm. Say 'confirm' to proceed with the payment.`;
+      return `I found your last ${intent.provider.name} payment for ${formatAmount(intent.amount)} so'm. Say 'confirm' to proceed with the payment.`;
     }
     
     if (intent.amount) {
-      return `Okay, I'll pay ${formatAmount(intent.amount)} so'm to ${intent.provider.name}. Please say 'confirm' to continue.`;
+      return `Okay, I'll pay ${formatAmount(intent.amount)} so'm for ${intent.provider.name}. Please say 'confirm' to continue.`;
     }
     
-    return `I understand you want to pay ${intent.provider.name}. How much would you like to pay?`;
+    return `I understand you want to pay for ${intent.provider.name}. How much would you like to pay?`;
   } else {
-    return `Great! Processing your payment to ${intent.provider?.name} for ${formatAmount(intent.amount || 0)} so'm...`;
+    return `Great! Processing your payment for ${intent.provider?.name} for ${formatAmount(intent.amount || 0)} so'm...`;
   }
 }
 

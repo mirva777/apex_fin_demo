@@ -1,4 +1,4 @@
-export type BillType = 'gas' | 'electricity' | 'mobile' | 'internet' | 'water' | 'unknown';
+export type BillType = 'gas' | 'electricity' | 'mobile' | 'internet' | 'water' | 'food' | 'rent' | 'shopping' | 'transport' | 'entertainment' | 'healthcare' | 'education' | 'other' | 'unknown';
 
 export type Provider = {
   id: string;
