@@ -64,12 +64,17 @@ export default function Home() {
             transition={{ delay: 0.4 }}
             className="mt-16 bg-background-card rounded-3xl p-8 border border-primary/20 shadow-2xl"
           >
-            <div className="aspect-video bg-background rounded-2xl flex items-center justify-center relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20 animate-pulse-slow" />
-              <div className="relative z-10">
-                <Mic className="w-20 h-20 text-primary mb-4 mx-auto" />
-                <p className="text-text-muted">Voice-powered payment experience</p>
-              </div>
+            <div className="aspect-video bg-background rounded-2xl overflow-hidden">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/uzF3h8astwU"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+              />
             </div>
           </motion.div>
         </div>
