@@ -115,7 +115,7 @@ export default function Home() {
             <Step
               number="2"
               title="Say What You Want"
-              description="Tell us what to pay for: 'Pay for food 250 thousand so'm' or 'Pay gas bill 120 thousand'"
+              description="Tell us what to pay: 'Pay for food 250 thousand' or 'Send money to Ali 50 thousand'"
             />
             <Step
               number="3"

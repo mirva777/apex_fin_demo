@@ -15,6 +15,7 @@ const BILL_TYPE_KEYWORDS: Record<BillType, string[]> = {
   entertainment: ['entertainment', 'movie', 'cinema', 'развлечения', 'ko\'ngilochar'],
   healthcare: ['health', 'healthcare', 'doctor', 'hospital', 'медицина', 'shifokor'],
   education: ['education', 'school', 'university', 'образование', 'ta\'lim'],
+  transfer: ['send', 'transfer', 'yuborish', 'jo\'natish', 'перевести', 'отправить'],
   other: [],
   unknown: [],
 };
@@ -52,9 +53,19 @@ export function parseIntent(text: string): IntentResult {
   
   // Detect bill type
   let billType: BillType = 'unknown';
+  let recipientName: string | null = null;
+  
   for (const [type, keywords] of Object.entries(BILL_TYPE_KEYWORDS)) {
     if (keywords.some(keyword => lowerText.includes(keyword))) {
       billType = type as BillType;
+      
+      // Extract recipient name for transfers
+      if (billType === 'transfer') {
+        const sendToMatch = text.match(/(?:send|transfer|yuborish|jo'natish|перевести|отправить)\s+(?:money\s+)?to\s+(\w+)/i);
+        if (sendToMatch && sendToMatch[1]) {
+          recipientName = sendToMatch[1].charAt(0).toUpperCase() + sendToMatch[1].slice(1).toLowerCase();
+        }
+      }
       break;
     }
   }
@@ -74,6 +85,16 @@ export function parseIntent(text: string): IntentResult {
   
   if (billType !== 'unknown') {
     provider = PROVIDERS.find(p => p.billType === billType) || null;
+    
+    // Create dynamic provider for transfers with recipient name
+    if (billType === 'transfer' && recipientName) {
+      provider = {
+        id: `transfer_${recipientName.toLowerCase()}`,
+        name: recipientName,
+        billType: 'transfer',
+        icon: '💸'
+      };
+    }
     
     // If no provider found for this bill type, create a dynamic one
     if (!provider && billType === 'other') {
@@ -140,11 +161,21 @@ export function isConfirmation(text: string): boolean {
 export function generateResponse(intent: IntentResult, phase: 'initial' | 'confirmation'): string {
   if (phase === 'initial') {
     if (intent.billType === 'unknown') {
-      return "I couldn't understand what you want to pay for. Please say something like 'pay for food' or 'pay gas bill'.";
+      return "I couldn't understand what you want to do. Please say something like 'pay for food', 'pay gas bill', or 'send money to Ali'.";
     }
     
     if (!intent.provider) {
+      if (intent.billType === 'transfer') {
+        return "I couldn't detect who you want to send money to. Please say something like 'send money to Ali' or 'transfer 50000 to John'.";
+      }
       return `I detected you want to pay for ${intent.billType}, but I couldn't find the details. Please try again.`;
+    }
+    
+    if (intent.billType === 'transfer') {
+      if (intent.amount) {
+        return `Okay, I'll send ${formatAmount(intent.amount)} so'm to ${intent.provider.name}. Please say 'confirm' to continue.`;
+      }
+      return `I understand you want to send money to ${intent.provider.name}. How much would you like to send?`;
     }
     
     if (intent.sameAsLast && intent.amount) {
@@ -157,6 +188,9 @@ export function generateResponse(intent: IntentResult, phase: 'initial' | 'confi
     
     return `I understand you want to pay for ${intent.provider.name}. How much would you like to pay?`;
   } else {
+    if (intent.billType === 'transfer') {
+      return `Great! Sending ${formatAmount(intent.amount || 0)} so'm to ${intent.provider?.name}...`;
+    }
     return `Great! Processing your payment for ${intent.provider?.name} for ${formatAmount(intent.amount || 0)} so'm...`;
   }
 }
